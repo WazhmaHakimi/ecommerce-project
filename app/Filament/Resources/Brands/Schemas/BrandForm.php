@@ -34,7 +34,7 @@ class BrandForm
                             ->dehydrated(),
                         FileUpload::make('image')
                             ->image()
-                            ->directory('categories')
+                            ->directory('brands')
                             ->columnSpanFull(),
                         Toggle::make('is_active')
                             ->required()
