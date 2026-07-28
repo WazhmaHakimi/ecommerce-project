@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use __PHP_Incomplete_Class;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
