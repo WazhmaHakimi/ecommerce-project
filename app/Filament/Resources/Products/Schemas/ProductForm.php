@@ -53,6 +53,7 @@ class ProductForm
                                     ->schema([
                                         FileUpload::make('images')
                                             ->multiple()
+                                            ->disk('public')
                                             ->directory('products')
                                             ->maxFiles(5)
                                             ->reorderable()

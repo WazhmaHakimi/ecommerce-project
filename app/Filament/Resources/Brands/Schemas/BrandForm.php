@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Brands\Schemas;
 
+use App\Models\Brand;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -9,7 +10,6 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Str;
 use Filament\Schemas\Components\Utilities\Set;
-use App\Models\Category;
 
 class BrandForm
 {
@@ -29,11 +29,12 @@ class BrandForm
                             ),
                         TextInput::make('slug')
                             ->required()
-                            ->unique(Category::class, 'slug', ignoreRecord: true)
+                            ->unique(Brand::class, 'slug', ignoreRecord: true)
                             ->disabled()
                             ->dehydrated(),
                         FileUpload::make('image')
                             ->image()
+                            ->disk('public')
                             ->directory('brands')
                             ->columnSpanFull(),
                         Toggle::make('is_active')

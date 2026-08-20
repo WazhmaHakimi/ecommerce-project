@@ -19,6 +19,7 @@ class CategoryInfolist
                         TextEntry::make('name'),
                         TextEntry::make('slug'),
                         ImageEntry::make('image')
+                            ->disk('public')
                             ->placeholder('-')
                             ->columnSpanFull(),
                         IconEntry::make('is_active')

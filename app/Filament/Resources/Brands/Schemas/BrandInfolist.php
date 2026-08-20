@@ -20,7 +20,8 @@ class BrandInfolist
                         TextEntry::make('slug'),
                         ImageEntry::make('image')
                             ->placeholder('-')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disk('public'),
                         IconEntry::make('is_active')
                             ->boolean(),
                         TextEntry::make('created_at')
