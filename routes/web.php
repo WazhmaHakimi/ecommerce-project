@@ -6,7 +6,7 @@ Route::livewire('/', 'pages::home-page')->name('home');
 Route::livewire('/categories', 'pages::categories-page')->name('categories');
 Route::livewire('/products', 'pages::products-page')->name('products');
 Route::livewire('/cart', 'pages::cart-page')->name('cart');
-Route::livewire('/products/{product}', 'pages::product-detail-page')->name('product-detail');
+Route::livewire('/products/{slug}', 'pages::product-detail-page')->name('product-detail');
 Route::livewire('/checkout', 'pages::checkout-page')->name('checkout');
 Route::livewire('/my-orders', 'pages::my-orders-page')->name('my-orders');
 Route::livewire('/my-orders/{order}', 'pages::order-detail-page')->name('my-order-detail');
