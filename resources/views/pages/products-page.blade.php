@@ -30,11 +30,13 @@ new #[Title('Products | E-Commerce')] class extends Component {
     #[Url]
     public $price_range = 30000;
 
+    #[Url]
+    public $sort = 'latest';
+
     #[Computed]
     public function products()
     {
-        $product_query = Product::where('is_active', 1)
-            ->latest();
+        $product_query = Product::where('is_active', 1);
 
         if (!empty($this->selected_categories))
         {
@@ -59,6 +61,16 @@ new #[Title('Products | E-Commerce')] class extends Component {
         if($this->price_range)
         {
             $product_query->whereBetween('price', [100, $this->price_range]);
+        }
+
+        if ($this->sort == 'latest')
+        {
+            $product_query->latest();
+        }
+
+        if ($this->sort == 'price')
+        {
+            $product_query->orderBy('price');
         }
 
         return $product_query->paginate($this->perPage);
@@ -155,10 +167,10 @@ new #[Title('Products | E-Commerce')] class extends Component {
                         <div
                             class="items-center justify-between hidden px-3 py-2 bg-gray-100 md:flex dark:bg-gray-900 ">
                             <div class="flex items-center justify-between">
-                                <select name="" id=""
+                                <select wire:model.live='sort'
                                     class="block w-40 text-base bg-gray-100 cursor-pointer dark:text-gray-400 dark:bg-gray-900">
-                                    <option value="">Sort by latest</option>
-                                    <option value="">Sort by Price</option>
+                                    <option value="latest">Sort by latest</option>
+                                    <option value="price">Sort by Price</option>
                                 </select>
                             </div>
                         </div>
