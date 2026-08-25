@@ -7,6 +7,8 @@ use Livewire\Component;
 use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Helpers\CartManagement;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new #[Title('Products | E-Commerce')] class extends Component {
     #[Url(as: 'page')]
@@ -33,43 +35,45 @@ new #[Title('Products | E-Commerce')] class extends Component {
     #[Url]
     public $sort = 'latest';
 
+    public function addToCart($product_id)
+    {
+        $total_count = CartManagement::addItemToCart($product_id);
+
+        $this->dispatch('update-cart-count', total_count: $total_count);
+
+        LivewireAlert::title('Product added to the cart successfully!')->success()->show();
+    }
+
     #[Computed]
     public function products()
     {
         $product_query = Product::where('is_active', 1);
 
-        if (!empty($this->selected_categories))
-        {
+        if (!empty($this->selected_categories)) {
             $product_query->whereIn('category_id', $this->selected_categories);
         }
 
-        if (!empty($this->selected_brands))
-        {
+        if (!empty($this->selected_brands)) {
             $product_query->whereIn('brand_id', $this->selected_brands);
         }
 
-        if ($this->featured)
-        {
+        if ($this->featured) {
             $product_query->where('is_featured', 1);
         }
 
-        if ($this->on_sale)
-        {
+        if ($this->on_sale) {
             $product_query->where('on_sale', 1);
         }
 
-        if($this->price_range)
-        {
+        if ($this->price_range) {
             $product_query->whereBetween('price', [100, $this->price_range]);
         }
 
-        if ($this->sort == 'latest')
-        {
+        if ($this->sort == 'latest') {
             $product_query->latest();
         }
 
-        if ($this->sort == 'price')
-        {
+        if ($this->sort == 'price') {
             $product_query->orderBy('price');
         }
 
@@ -102,8 +106,8 @@ new #[Title('Products | E-Commerce')] class extends Component {
                             @foreach ($this->categories as $category)
                                 <li class="mb-4" wire:key="{{ $category->id }}">
                                     <label for="{{ $category->slug }}" class="flex items-center dark:text-gray-400 ">
-                                        <input type="checkbox" wire:model.live="selected_categories" id="{{ $category->slug }}" value="{{ $category->id }}"
-                                            class="w-4 h-4 mr-2">
+                                        <input type="checkbox" wire:model.live="selected_categories"
+                                            id="{{ $category->slug }}" value="{{ $category->id }}" class="w-4 h-4 mr-2">
                                         <span class="text-lg">{{ $category->name }}</span>
                                     </label>
                                 </li>
@@ -118,8 +122,8 @@ new #[Title('Products | E-Commerce')] class extends Component {
                             @foreach ($this->brands as $brand)
                                 <li class="mb-4" wire:key="{{ $brand->id }}">
                                     <label for="{{ $brand->slug }}" class="flex items-center dark:text-gray-300">
-                                        <input type="checkbox" wire:model.live='selected_brands' id="{{ $brand->slug }}" value="{{ $brand->id }}"
-                                            class="w-4 h-4 mr-2">
+                                        <input type="checkbox" wire:model.live='selected_brands'
+                                            id="{{ $brand->slug }}" value="{{ $brand->id }}" class="w-4 h-4 mr-2">
                                         <span class="text-lg dark:text-gray-400">{{ $brand->name }}</span>
                                     </label>
                                 </li>
@@ -132,13 +136,15 @@ new #[Title('Products | E-Commerce')] class extends Component {
                         <ul>
                             <li class="mb-4">
                                 <label for="featured" class="flex items-center dark:text-gray-300">
-                                    <input type="checkbox" id="featured" wire:model.live='featured' value="1" class="w-4 h-4 mr-2">
+                                    <input type="checkbox" id="featured" wire:model.live='featured' value="1"
+                                        class="w-4 h-4 mr-2">
                                     <span class="text-lg dark:text-gray-400">Featured Products</span>
                                 </label>
                             </li>
                             <li class="mb-4">
                                 <label for="on_sale" class="flex items-center dark:text-gray-300">
-                                    <input type="checkbox" id="on_sale" wire:model.live='on_sale' class="w-4 h-4 mr-2">
+                                    <input type="checkbox" id="on_sale" wire:model.live='on_sale'
+                                        class="w-4 h-4 mr-2">
                                     <span class="text-lg dark:text-gray-400">On Sale</span>
                                 </label>
                             </li>
@@ -156,8 +162,10 @@ new #[Title('Products | E-Commerce')] class extends Component {
                                 class="w-full h-1 mb-4 bg-blue-100 rounded appearance-none cursor-pointer"
                                 max="50000" value="100000" step="100">
                             <div class="flex justify-between ">
-                                <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(100, 'AFN') }}</span>
-                                <span class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(50000, 'AFN') }}</span>
+                                <span
+                                    class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(100, 'AFN') }}</span>
+                                <span
+                                    class="inline-block text-lg font-bold text-blue-400 ">{{ Number::currency(50000, 'AFN') }}</span>
                             </div>
                         </div>
                     </div>
@@ -198,14 +206,17 @@ new #[Title('Products | E-Commerce')] class extends Component {
                                     </div>
                                     <div class="flex justify-center p-4 border-t border-gray-300 dark:border-gray-700">
 
-                                        <a href="#"
+                                        <a wire:click.prevent="addToCart({{ $product->id }})" href="#"
                                             class="text-gray-500 flex items-center space-x-2 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-300">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="w-4 h-4 bi bi-cart3 " viewBox="0 0 16 16">
                                                 <path
                                                     d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z">
                                                 </path>
-                                            </svg><span>Add to Cart</span>
+                                            </svg><span wire:loading.remove
+                                                wire:target='addToCart({{ $product->id }})'>Add to Cart</span><span
+                                                wire:loading
+                                                wire:target='addToCart({{ $product->id }})'>Adding...</span>
                                         </a>
 
                                     </div>

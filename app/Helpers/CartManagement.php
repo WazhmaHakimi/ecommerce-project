@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Support\Facades\Cookie;
 
 class CartManagement
@@ -64,7 +63,7 @@ class CartManagement
     // Add cart items to cookies 
     static public function addCartItemsToCookies($cart_items)
     {
-        Cookie::queue('cart_items', json_decode($cart_items), 60 * 24 * 30);
+        Cookie::queue('cart_items', json_encode($cart_items), 60 * 24 * 30);
     }
 
     // Remove cart items from the cookies
@@ -76,7 +75,7 @@ class CartManagement
     // Get all the cart items from the cookies
     static public function getCartItemsFromCookies()
     {
-        $cart_items = json_encode(Cookie::get('cart_items'), true);
+        $cart_items = json_decode(Cookie::get('cart_items'), true);
 
         if (!$cart_items) {
             $cart_items = [];

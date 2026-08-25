@@ -13,11 +13,12 @@
 </head>
 
 <body>
-    <x-partials.navbar />
+    <livewire:partials.navbar />
     {{ $slot }}
 
-    <x-partials.footer />
+    <livewire:partials.footer />
     @livewireScripts
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
