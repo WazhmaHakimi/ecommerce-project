@@ -35,7 +35,7 @@ new #[Title('Cart | E-Commerce')] class extends Component {
                         </thead>
                         <tbody>
                             @forelse ($this->cart_items as $item)
-                            <tr wire:key='{{ $item[' product_id'] }}'>
+                            <tr wire:key="{{ $item['product_id'] }}">
                                 <td class="py-4">
                                     <div class="flex items-center">
                                         <img class="h-16 w-16 mr-4" src="{{ url('storage', $item['image']) }}"
