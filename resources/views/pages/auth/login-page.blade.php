@@ -44,6 +44,14 @@ new #[Title('Login | E-Commerce')] class extends Component {
 
                     <!-- Form -->
                     <form wire:submit.prevent='save'>
+
+                        @if (session('error'))
+                            <div class="bg-red-500 text-sm text-foreground-inverse rounded-lg p-4 pb-4" role="alert"
+                                tabindex="-1" aria-labelledby="hs-solid-color-danger-label">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
                         <div class="grid gap-y-4">
                             <!-- Form Group -->
                             <div>

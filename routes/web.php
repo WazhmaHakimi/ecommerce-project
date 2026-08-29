@@ -12,8 +12,8 @@ Route::livewire('/products/{slug}', 'pages::product-detail-page')->name('product
 Route::middleware('guest')->group(function () {
     Route::livewire('/login', 'pages::auth.login-page')->name('login');
     Route::livewire('/register', 'pages::auth.register-page')->name('register');
-    Route::livewire('/reset', 'pages::auth.reset-password-page')->name('reset-password');
-    Route::livewire('/forgot', 'pages::auth.forgot-page')->name('forgot-password');
+    Route::livewire('/reset/{token}', 'pages::auth.reset-password-page')->name('password.reset');
+    Route::livewire('/forgot', 'pages::auth.forgot-page')->name('password.request');
 });
 
 Route::middleware('auth')->group(function () {
