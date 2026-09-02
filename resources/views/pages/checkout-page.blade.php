@@ -5,8 +5,8 @@ use Livewire\Attributes\Title;
 use App\Helpers\CartManagement;
 use App\Models\Address;
 use App\Models\Order;
-use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 new #[Title('Checkout Page | E-Commerce')] class extends Component {
     public $cart_items = [];
@@ -17,6 +17,10 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
     {
         $this->cart_items = CartManagement::getCartItemsFromCookies();
         $this->grand_total = CartManagement::calculateGrandTotal($this->cart_items);
+
+        if (count($this->cart_items) == 0) {
+            return redirect('/products');
+        }
     }
 
     public function placeOrder()
@@ -49,8 +53,6 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
             ];
         }
 
-        // dd($line)
-
         $order = new Order();
         $order->user_id = auth()->user()->id;
         $order->grand_total = CartManagement::calculateGrandTotal($cart_items);
@@ -60,7 +62,7 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
         $order->currency = 'AFN';
         $order->shipping_amount = 0;
         $order->shipping_method = 'none';
-        $order->notes = 'Order placed by' . auth()->user()->name;
+        $order->notes = 'Order placed by ' . auth()->user()->name;
 
         $address = new Address();
         $address->first_name = $this->first_name;
@@ -81,7 +83,7 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
                 'customer_email' => auth()->user()->email,
                 'line_items' => $line_items,
                 'mode' => 'payment',
-                'success_url' => route('success') . '/order/success?session_id=[CHECKOUT_SESSION_ID]',
+                'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('cancel'),
             ]);
 
