@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::livewire('/checkout', 'pages::checkout-page')->name('checkout');
     Route::livewire('/my-orders', 'pages::my-orders-page')->name('my-orders');
-    Route::livewire('/my-orders/{order}', 'pages::order-detail-page')->name('my-order-detail');
+    Route::livewire('/my-orders/{order}', 'pages::order-detail-page')->name('my-order.show');
     Route::livewire('/success', 'pages::success-page')->name('success');
     Route::livewire('/cancel', 'pages::cancel-page')->name('cancel');
 });

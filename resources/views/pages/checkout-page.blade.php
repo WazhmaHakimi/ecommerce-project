@@ -7,6 +7,8 @@ use App\Models\Address;
 use App\Models\Order;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlaced;
 
 new #[Title('Checkout Page | E-Commerce')] class extends Component {
     public $cart_items = [];
@@ -97,6 +99,7 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
         $address->save();
         $order->items()->createMany($cart_items);
         CartManagement::clearCartItemsFromCookies();
+        Mail::to(auth()->user()->email)->send(new OrderPlaced($order));
 
         return redirect($redirect_url);
     }
@@ -330,7 +333,8 @@ new #[Title('Checkout Page | E-Commerce')] class extends Component {
                 </div>
                 <button type='submit'
                     class="bg-green-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-green-600">
-                    Place Order
+                    <span wire:loading.remove>Place Order</span>
+                    <span wire:loading>Processing...</span>
                 </button>
                 <div class="bg-white mt-4 rounded-xl shadow p-4 sm:p-7 dark:bg-slate-900">
                     <div class="text-xl font-bold underline text-gray-700 dark:text-white mb-2">
