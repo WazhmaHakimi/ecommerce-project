@@ -117,7 +117,7 @@ new class extends Component {
                                 <div
                                     class="hs-dropdown-menu absolute right-0 mt-2 hidden w-48 z-50 bg-white shadow-md rounded-lg p-2 dark:bg-gray-800 dark:border dark:border-gray-700">
 
-                                    <a href="#"
+                                    <a wire:navigate href="/my-orders"
                                         class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
                                         My Orders
                                     </a>
