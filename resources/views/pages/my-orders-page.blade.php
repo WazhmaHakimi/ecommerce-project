@@ -77,7 +77,7 @@ new #[Title('My Orders | E-Commerce')] class extends Component {
                                             ' <span class="bg-green-500 py-1 px-3 rounded text-white shadow">Paid</span>';
                                     } elseif ($order->payment_status == 'pending') {
                                         $payment_status =
-                                            '<span class="bg-blue-500 py-1 px-3 rounded text-white shadow">Pending</span>';
+                                            '<span class="bg-yellow-500 py-1 px-3 rounded text-white shadow">Pending</span>';
                                     } elseif ($order->payment_status == 'failed') {
                                         $payment_status =
                                             '<span class="bg-red-500 py-1 px-3 rounded text-white shadow">Failed</span>';

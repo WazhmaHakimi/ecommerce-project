@@ -1,8 +1,19 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
+use App\Models\OrderItem;
+use App\Models\Address;
+use App\Models\Order;
 
-new class extends Component {};
+new #[Title('Order Details | E-Commerce')] class extends Component {
+    public $order;
+
+    public function mount($order_id)
+    {
+        $this->order = Order::with(['address', 'items.product'])->findOrFail($order_id);
+    }
+};
 ?>
 
 <div class="w-full max-w-[85rem] py-10 px-4 sm:px-6 lg:px-8 mx-auto">
@@ -32,7 +43,7 @@ new class extends Component {};
                         </p>
                     </div>
                     <div class="mt-1 flex items-center gap-x-2">
-                        <div>Jace Grimes</div>
+                        <div>{{ $order->address->full_name }}</div>
                     </div>
                 </div>
             </div>
@@ -63,7 +74,7 @@ new class extends Component {};
                     </div>
                     <div class="mt-1 flex items-center gap-x-2">
                         <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200">
-                            17-02-2024
+                            {{ $order->created_at->format('d M Y') }}
                         </h3>
                     </div>
                 </div>
@@ -92,7 +103,24 @@ new class extends Component {};
                         </p>
                     </div>
                     <div class="mt-1 flex items-center gap-x-2">
-                        <span class="bg-yellow-500 py-1 px-3 rounded text-white shadow">Processing</span>
+                        @php
+                            $status = '';
+
+                            if ($order->status == 'new') {
+                                $status = 'bg-blue-500';
+                            } elseif ($order->status === 'processing') {
+                                $status = 'bg-yellow-500';
+                            } elseif ($order->status === 'shipped') {
+                                $status = 'bg-purple-500';
+                            } elseif ($order->status === 'delivered') {
+                                $status = 'bg-green-500';
+                            } elseif ($order->status === 'cancelled') {
+                                $status = 'bg-red-500';
+                            }
+                        @endphp
+                        <span class="{!! $status !!} py-1 px-3 rounded text-white shadow">
+                            {{ ucfirst($order->status) }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -122,7 +150,20 @@ new class extends Component {};
                         </p>
                     </div>
                     <div class="mt-1 flex items-center gap-x-2">
-                        <span class="bg-green-500 py-1 px-3 rounded text-white shadow">Paid</span>
+                        @php
+                            $payment_status = '';
+
+                            if ($order->payment_status == 'paid') {
+                                $payment_status = 'bg-green-500';
+                            } elseif ($order->payment_status === 'pending') {
+                                $payment_status = 'bg-yellow-500';
+                            } elseif ($order->payment_status === 'failed') {
+                                $payment_status = 'bg-red-500';
+                            }
+                        @endphp
+                        <span class="{{ $payment_status }} py-1 px-3 rounded text-white shadow">
+                            {{ ucfirst($order->payment_status) }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -144,40 +185,23 @@ new class extends Component {};
                         </tr>
                     </thead>
                     <tbody>
-
-                        <!--[if BLOCK]><![endif]-->
-                        <tr wire:key="53">
-                            <td class="py-4">
-                                <div class="flex items-center">
-                                    <img class="h-16 w-16 mr-4"
-                                        src="http://localhost:8000/storage/products/01HND3J5XS7ZC5J84BK5YDM6Z2.jpg"
-                                        alt="Product image">
-                                    <span class="font-semibold">Samsung Galaxy Watch6</span>
-                                </div>
-                            </td>
-                            <td class="py-4">₹29,999.00</td>
-                            <td class="py-4">
-                                <span class="text-center w-8">1</span>
-                            </td>
-                            <td class="py-4">₹29,999.00</td>
-                        </tr>
-                        <tr wire:key="54">
-                            <td class="py-4">
-                                <div class="flex items-center">
-                                    <img class="h-16 w-16 mr-4"
-                                        src="http://localhost:8000/storage/products/01HND30J0P7C6MWQ1XQK7YDQKA.jpg"
-                                        alt="Product image">
-                                    <span class="font-semibold">Samsung Galaxy Book3</span>
-                                </div>
-                            </td>
-                            <td class="py-4">₹75,000.00</td>
-                            <td class="py-4">
-                                <span class="text-center w-8">5</span>
-                            </td>
-                            <td class="py-4">₹375,000.00</td>
-                        </tr>
-                        <!--[if ENDBLOCK]><![endif]-->
-
+                        @foreach ($order->items as $item)
+                            <tr wire:key="{{ $item->id }}">
+                                <td class="py-4">
+                                    <div class="flex items-center">
+                                        <img class="h-16 w-16 mr-4"
+                                            src="{{ url('storage', $item->product->images[0]) }}"
+                                            alt="{{ $item->product->name }}">
+                                        <span class="font-semibold">{{ $item->product->name }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">{{ Number::currency($item->unit_amount, 'AFN') }}</td>
+                                <td class="py-4">
+                                    <span class="text-center w-8">{{ $item->quantity }}</span>
+                                </td>
+                                <td class="py-4">{{ Number::currency($item->total_amount, 'AFN') }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -186,11 +210,12 @@ new class extends Component {};
                 <h1 class="font-3xl font-bold text-slate-500 mb-3">Shipping Address</h1>
                 <div class="flex justify-between items-center">
                     <div>
-                        <p>42227 Zoila Glens, Oshkosh, Michigan, 55928</p>
+                        <p>{{ $order->address->street_address }}, {{ $order->address->city }},
+                            {{ $order->address->state }}, {{ $order->address->zip_code }}</p>
                     </div>
                     <div>
                         <p class="font-semibold">Phone:</p>
-                        <p>023-509-0009</p>
+                        <p>{{ $order->address->phone }}</p>
                     </div>
                 </div>
             </div>
@@ -201,20 +226,20 @@ new class extends Component {};
                 <h2 class="text-lg font-semibold mb-4">Summary</h2>
                 <div class="flex justify-between mb-2">
                     <span>Subtotal</span>
-                    <span>₹404,999.00</span>
+                    <span>{{ Number::currency($order->grand_total, 'AFN') }}</span>
                 </div>
                 <div class="flex justify-between mb-2">
                     <span>Taxes</span>
-                    <span>₹0.00</span>
+                    <span>{{ Number::currency(0, 'AFN') }}</span>
                 </div>
                 <div class="flex justify-between mb-2">
                     <span>Shipping</span>
-                    <span>₹0.00</span>
+                    <span>{{ Number::currency(0, 'AFN') }}</span>
                 </div>
                 <hr class="my-2">
                 <div class="flex justify-between mb-2">
                     <span class="font-semibold">Grand Total</span>
-                    <span class="font-semibold">₹404,999.00</span>
+                    <span class="font-semibold">{{ Number::currency($order->grand_total, 'AFN') }}</span>
                 </div>
 
             </div>
