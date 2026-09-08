@@ -45,7 +45,7 @@ class OrdersTable
                         'processing' => 'Processing',
                         'shipped' => 'Shipped',
                         'delivered' => 'Delivered',
-                        'canceled' => 'Canceled',
+                        'cancelled' => 'Cancelled',
                     ]),
                 TextColumn::make('created_at')
                     ->dateTime()

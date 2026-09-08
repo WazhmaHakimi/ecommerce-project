@@ -67,7 +67,7 @@ new #[Title('My Orders | E-Commerce')] class extends Component {
                                     } elseif ($order->status == 'delivered') {
                                         $status =
                                             '<span class="bg-green-500 py-1 px-3 rounded text-white shadow">Delivered</span>';
-                                    } elseif ($order->status == 'canceled') {
+                                    } elseif ($order->status == 'cancelled') {
                                         $status =
                                             '<span class="bg-red-500 py-1 px-3 rounded text-white shadow">Canceled</span>';
                                     }
