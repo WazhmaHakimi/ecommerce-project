@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,11 @@ class Order extends Model
         'shipping_amount',
         'shipping_method',
         'notes'
+    ];
+
+    protected $casts = [
+        'payment_status' => PaymentStatus::class,
+        'status' => 'string',
     ];
 
     public function user()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\PaymentStatus;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -22,7 +23,9 @@ class OrderInfolist
                         TextEntry::make('payment_method')
                             ->placeholder('-'),
                         TextEntry::make('payment_status')
-                            ->placeholder('-'),
+                            ->label('Payment Status')
+                            ->badge(fn(PaymentStatus $state) => $state->getColor())
+                            ->icon(fn(PaymentStatus $state) => $state->getIcon()),
                         TextEntry::make('status'),
                         TextEntry::make('currency')
                             ->placeholder('-'),

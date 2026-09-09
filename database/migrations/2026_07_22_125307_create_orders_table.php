@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->index();
             $table->decimal('grand_total', 10, 2)->nullable();
             $table->string('payment_method')->nullable();
-            $table->string('payment_status')->nullable();
+            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending')->index();
             $table->enum('status', ['new', 'processing', 'shipped', 'delivered', 'cancelled'])
                 ->default('new')->index();
             $table->string('currency')->nullable();

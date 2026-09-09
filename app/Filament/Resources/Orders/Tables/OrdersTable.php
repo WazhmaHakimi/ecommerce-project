@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Enums\PaymentStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -30,7 +31,9 @@ class OrdersTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('payment_status')
-                    ->searchable(),
+                    ->badge()
+                    ->color(fn(PaymentStatus $state) => $state->getColor())
+                    ->icon(fn(PaymentStatus $state) => $state->getIcon()),
                 TextColumn::make('currency')
                     ->searchable()
                     ->sortable(),

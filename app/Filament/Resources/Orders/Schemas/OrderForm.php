@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\PaymentStatus;
 use App\Models\Product;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -41,11 +42,7 @@ class OrderForm
                                     ])
                                     ->required(),
                                 Select::make('payment_status')
-                                    ->options([
-                                        'pending' => 'Pending',
-                                        'paid' => 'Paid',
-                                        'failed' => 'Failed',
-                                    ])
+                                    ->options(PaymentStatus::class)
                                     ->default('pending')
                                     ->required(),
                                 ToggleButtons::make('status')
