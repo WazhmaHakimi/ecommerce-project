@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Models\Product;
 use Filament\Forms\Components\Hidden;
@@ -48,29 +49,8 @@ class OrderForm
                                 ToggleButtons::make('status')
                                     ->inline()
                                     ->default('new')
-                                    ->options([
-                                        'new' => 'New',
-                                        'processing' => 'Processing',
-                                        'shipped' => 'Shipped',
-                                        'delivered' => 'Delivered',
-                                        'cancelled' => 'Cancelled',
-                                    ])
-                                    ->colors([
-                                        'new' => 'info',
-                                        'processing' => 'warning',
-                                        'shipped' => 'info',
-                                        'delivered' => 'success',
-                                        'cancelled' => 'danger'
-                                    ])
-                                    ->icons([
-                                        'new' => Heroicon::Sparkles,
-                                        'processing' => Heroicon::ArrowPath,
-                                        'shipped' => Heroicon::Truck,
-                                        'delivered' => Heroicon::CheckCircle,
-                                        'cancelled' => Heroicon::XCircle,
-                                    ])
+                                    ->options(OrderStatus::class)
                                     ->required(),
-
                                 Select::make('currency')
                                     ->options([
                                         'afn' => 'Afghan Afghani',

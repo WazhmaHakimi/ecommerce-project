@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
 use App\Filament\Resources\Orders\Widgets\OrderStats;
 use Filament\Actions\CreateAction;
@@ -30,11 +31,11 @@ class ListOrders extends ListRecords
     {
         return [
             null => Tab::make('All'),
-            'new' => Tab::make('New')->query(fn($query) => $query->where('status', 'new')),
-            'processing' => Tab::make('Processing')->query(fn($query) => $query->where('status', 'processing')),
-            'shipped' => Tab::make('Shipped')->query(fn($query) => $query->where('status', 'shipped')),
-            'delivered' => Tab::make('Delivered')->query(fn($query) => $query->where('status', 'delivered')),
-            'cancelled' => Tab::make('Cancelled')->query(fn($query) => $query->where('status', 'cancelled')),
+            OrderStatus::New->value => Tab::make('New')->query(fn($query) => $query->where('status', OrderStatus::New->value)),
+            OrderStatus::Processing->value => Tab::make('Processing')->query(fn($query) => $query->where('status', OrderStatus::Processing->value)),
+            OrderStatus::Shipped->value => Tab::make('Shipped')->query(fn($query) => $query->where('status', OrderStatus::Shipped->value)),
+            OrderStatus::Delivered->value => Tab::make('Delivered')->query(fn($query) => $query->where('status', OrderStatus::Delivered->value)),
+            OrderStatus::Cancelled->value => Tab::make('Cancelled')->query(fn($query) => $query->where('status', OrderStatus::Cancelled->value)),
         ];
     }
 }

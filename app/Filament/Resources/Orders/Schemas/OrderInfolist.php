@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -26,7 +27,10 @@ class OrderInfolist
                             ->label('Payment Status')
                             ->badge(fn(PaymentStatus $state) => $state->getColor())
                             ->icon(fn(PaymentStatus $state) => $state->getIcon()),
-                        TextEntry::make('status'),
+                        TextEntry::make('status')
+                            ->label('Order Status')
+                            ->badge(fn(OrderStatus $state) => $state->getColor())
+                            ->icon(fn(OrderStatus $state) => $state->getIcon()),
                         TextEntry::make('currency')
                             ->placeholder('-'),
                         TextEntry::make('shipping_amount')

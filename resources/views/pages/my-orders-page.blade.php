@@ -19,7 +19,6 @@ new #[Title('My Orders | E-Commerce')] class extends Component {
 };
 ?>
 
-
 <div class="w-full max-w-[85rem] px-6 sm:px-10 md:px-16 lg:px-24 py-2 sm:pt-8 lg:py-10 mx-auto">
     <h1 class="text-4xl font-bold text-slate-500">My Orders</h1>
     <div class="flex flex-col bg-white p-5 rounded mt-4 shadow-lg">
